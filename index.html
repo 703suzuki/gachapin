@@ -5,50 +5,58 @@
 <title>ガチャゲーム</title>
 
 <style>
+
 body{
-    font-family: sans-serif;
+    font-family:sans-serif;
     text-align:center;
+    margin:0;
+    padding-top:40px;
     background:linear-gradient(135deg,#2b2bff,#6dd5fa);
     color:white;
-    margin:0;
-    padding-top:50px;
 }
 
 h1{
-    font-size:40px;
+    font-size:42px;
 }
 
-#gachaButton{
-    padding:20px 40px;
-    font-size:22px;
+button{
+    padding:15px 35px;
+    font-size:20px;
     border:none;
     border-radius:10px;
-    background:gold;
+    margin:10px;
     cursor:pointer;
-    transition:0.2s;
 }
 
-#gachaButton:hover{
-    transform:scale(1.1);
+.single{
+    background:gold;
+}
+
+.ten{
+    background:#ff6b6b;
+    color:white;
 }
 
 #result{
-    margin-top:40px;
-    font-size:28px;
-    min-height:40px;
+    margin-top:30px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:15px;
+    max-width:600px;
+    margin:20px auto;
 }
 
 .card{
-    margin:20px auto;
-    padding:30px;
-    width:250px;
-    border-radius:15px;
-    font-size:24px;
+    padding:20px;
+    border-radius:12px;
     font-weight:bold;
 }
 
 .N{
-    background:#cccccc;
+    background:#ccc;
     color:black;
 }
 
@@ -63,67 +71,128 @@ h1{
 .SSR{
     background:linear-gradient(45deg,gold,orange);
     color:black;
+    animation:glow 1s infinite alternate;
 }
+
+@keyframes glow{
+    from{box-shadow:0 0 10px gold;}
+    to{box-shadow:0 0 30px yellow;}
+}
+
+.rainbow{
+    animation:rainbow 2s linear infinite;
+}
+
+@keyframes rainbow{
+0%{background:red}
+20%{background:orange}
+40%{background:yellow}
+60%{background:green}
+80%{background:blue}
+100%{background:purple}
+}
+
 </style>
 </head>
 
 <body>
 
-<h1>🎰 スマホ風ガチャ</h1>
+<h1>🎰 ガチャゲーム</h1>
 
-<button id="gachaButton">ガチャを引く</button>
+<button class="single" onclick="draw(1)">単発ガチャ</button>
+<button class="ten" onclick="draw(10)">10連ガチャ</button>
 
 <div id="result"></div>
 
 <script>
 
-const characters = [
- {name:"スライム", rarity:"N"},
- {name:"ゴブリン", rarity:"N"},
- {name:"ナイト", rarity:"R"},
- {name:"エルフ", rarity:"R"},
- {name:"ドラゴン", rarity:"SR"},
- {name:"フェニックス", rarity:"SR"},
- {name:"伝説の勇者", rarity:"SSR"}
+const characters=[
+{name:"スライム",rarity:"N"},
+{name:"ゴブリン",rarity:"N"},
+{name:"ナイト",rarity:"R"},
+{name:"エルフ",rarity:"R"},
+{name:"ドラゴン",rarity:"SR"},
+{name:"フェニックス",rarity:"SR"},
+{name:"伝説の勇者",rarity:"SSR"}
 ];
 
 function getRandomCharacter(){
 
- let rand = Math.random()*100;
+let rand=Math.random()*100;
 
- if(rand < 60){
-     return characters[Math.floor(Math.random()*2)];
- }
- else if(rand < 85){
-     return characters[2 + Math.floor(Math.random()*2)];
- }
- else if(rand < 97){
-     return characters[4 + Math.floor(Math.random()*2)];
- }
- else{
-     return characters[6];
- }
+if(rand<60){
+return characters[Math.floor(Math.random()*2)];
+}
+else if(rand<85){
+return characters[2+Math.floor(Math.random()*2)];
+}
+else if(rand<97){
+return characters[4+Math.floor(Math.random()*2)];
+}
+else{
+return characters[6];
+}
 
 }
 
-document.getElementById("gachaButton").onclick = function(){
+function draw(num){
 
- const resultDiv = document.getElementById("result");
+const result=document.getElementById("result");
+result.innerHTML="ガチャを引いています...";
 
- resultDiv.innerHTML = "ガチャを引いています...";
+setTimeout(()=>{
 
- setTimeout(()=>{
+let html="";
+let ssr=false;
 
-     const char = getRandomCharacter();
+if(num===1){
 
-     resultDiv.innerHTML =
-     `<div class="card ${char.rarity}">
-     ${char.rarity} ★ ${char.name}
-     </div>`;
+let char=getRandomCharacter();
 
- },1000);
+if(char.rarity==="SSR"){
+document.body.classList.add("rainbow");
+ssr=true;
+}
 
-};
+html=`<div class="card ${char.rarity}">
+${char.rarity} ★ ${char.name}
+</div>`;
+
+}else{
+
+html="<div class='grid'>";
+
+for(let i=0;i<num;i++){
+
+let char=getRandomCharacter();
+
+if(char.rarity==="SSR"){
+ssr=true;
+}
+
+html+=`<div class="card ${char.rarity}">
+${char.rarity}<br>${char.name}
+</div>`;
+
+}
+
+html+="</div>";
+
+if(ssr){
+document.body.classList.add("rainbow");
+}
+
+}
+
+result.innerHTML=html;
+
+setTimeout(()=>{
+document.body.classList.remove("rainbow");
+},2000);
+
+},1000);
+
+}
 
 </script>
 
