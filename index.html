@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ガチャゲーム</title>
+
+<style>
+body{
+    font-family: sans-serif;
+    text-align:center;
+    background:linear-gradient(135deg,#2b2bff,#6dd5fa);
+    color:white;
+    margin:0;
+    padding-top:50px;
+}
+
+h1{
+    font-size:40px;
+}
+
+#gachaButton{
+    padding:20px 40px;
+    font-size:22px;
+    border:none;
+    border-radius:10px;
+    background:gold;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+#gachaButton:hover{
+    transform:scale(1.1);
+}
+
+#result{
+    margin-top:40px;
+    font-size:28px;
+    min-height:40px;
+}
+
+.card{
+    margin:20px auto;
+    padding:30px;
+    width:250px;
+    border-radius:15px;
+    font-size:24px;
+    font-weight:bold;
+}
+
+.N{
+    background:#cccccc;
+    color:black;
+}
+
+.R{
+    background:#4caf50;
+}
+
+.SR{
+    background:#2196f3;
+}
+
+.SSR{
+    background:linear-gradient(45deg,gold,orange);
+    color:black;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎰 スマホ風ガチャ</h1>
+
+<button id="gachaButton">ガチャを引く</button>
+
+<div id="result"></div>
+
+<script>
+
+const characters = [
+ {name:"スライム", rarity:"N"},
+ {name:"ゴブリン", rarity:"N"},
+ {name:"ナイト", rarity:"R"},
+ {name:"エルフ", rarity:"R"},
+ {name:"ドラゴン", rarity:"SR"},
+ {name:"フェニックス", rarity:"SR"},
+ {name:"伝説の勇者", rarity:"SSR"}
+];
+
+function getRandomCharacter(){
+
+ let rand = Math.random()*100;
+
+ if(rand < 60){
+     return characters[Math.floor(Math.random()*2)];
+ }
+ else if(rand < 85){
+     return characters[2 + Math.floor(Math.random()*2)];
+ }
+ else if(rand < 97){
+     return characters[4 + Math.floor(Math.random()*2)];
+ }
+ else{
+     return characters[6];
+ }
+
+}
+
+document.getElementById("gachaButton").onclick = function(){
+
+ const resultDiv = document.getElementById("result");
+
+ resultDiv.innerHTML = "ガチャを引いています...";
+
+ setTimeout(()=>{
+
+     const char = getRandomCharacter();
+
+     resultDiv.innerHTML =
+     `<div class="card ${char.rarity}">
+     ${char.rarity} ★ ${char.name}
+     </div>`;
+
+ },1000);
+
+};
+
+</script>
+
+</body>
+</html>
