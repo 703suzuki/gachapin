@@ -2,85 +2,72 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>ガチャゲーム</title>
+<title>スマホ風ガチャ</title>
 
 <style>
 
 body{
-    font-family:sans-serif;
-    text-align:center;
-    margin:0;
-    padding-top:40px;
-    background:linear-gradient(135deg,#2b2bff,#6dd5fa);
-    color:white;
+font-family:sans-serif;
+text-align:center;
+margin:0;
+padding-top:40px;
+background:linear-gradient(135deg,#1a2a6c,#b21f1f,#fdbb2d);
+color:white;
+transition:0.5s;
 }
 
 h1{
-    font-size:42px;
+font-size:42px;
 }
 
 button{
-    padding:15px 35px;
-    font-size:20px;
-    border:none;
-    border-radius:10px;
-    margin:10px;
-    cursor:pointer;
+padding:15px 35px;
+font-size:20px;
+border:none;
+border-radius:10px;
+margin:10px;
+cursor:pointer;
 }
 
-.single{
-    background:gold;
-}
-
-.ten{
-    background:#ff6b6b;
-    color:white;
-}
+.single{background:gold}
+.ten{background:#ff6b6b;color:white}
 
 #result{
-    margin-top:30px;
+margin-top:30px;
 }
 
 .grid{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:15px;
-    max-width:600px;
-    margin:20px auto;
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:15px;
+max-width:700px;
+margin:20px auto;
 }
 
 .card{
-    padding:20px;
-    border-radius:12px;
-    font-weight:bold;
+padding:18px;
+border-radius:12px;
+font-weight:bold;
+font-size:16px;
 }
 
-.N{
-    background:#ccc;
-    color:black;
-}
-
-.R{
-    background:#4caf50;
-}
-
-.SR{
-    background:#2196f3;
-}
+.N{background:#ccc;color:black}
+.R{background:#4caf50}
+.SR{background:#2196f3}
 
 .SSR{
-    background:linear-gradient(45deg,gold,orange);
-    color:black;
-    animation:glow 1s infinite alternate;
+background:linear-gradient(45deg,gold,orange);
+color:black;
+animation:glow 1s infinite alternate;
 }
 
 @keyframes glow{
-    from{box-shadow:0 0 10px gold;}
-    to{box-shadow:0 0 30px yellow;}
+from{box-shadow:0 0 10px gold;}
+to{box-shadow:0 0 30px yellow;}
 }
 
 .rainbow{
-    animation:rainbow 2s linear infinite;
+animation:rainbow 2s linear infinite;
 }
 
 @keyframes rainbow{
@@ -92,52 +79,100 @@ button{
 100%{background:purple}
 }
 
+#ssrEffect{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+display:none;
+justify-content:center;
+align-items:center;
+font-size:60px;
+font-weight:bold;
+color:white;
+background:rgba(0,0,0,0.6);
+z-index:10;
+animation:pop 0.5s;
+}
+
+@keyframes pop{
+from{transform:scale(0)}
+to{transform:scale(1)}
+}
+
 </style>
 </head>
 
 <body>
 
-<h1>🎰 ガチャゲーム</h1>
+<h1>🎰 スマホ風ガチャ</h1>
 
 <button class="single" onclick="draw(1)">単発ガチャ</button>
 <button class="ten" onclick="draw(10)">10連ガチャ</button>
 
 <div id="result"></div>
 
+<div id="ssrEffect">✨ SSR確定!! ✨</div>
+
 <script>
 
 const characters=[
+
 {name:"スライム",rarity:"N"},
 {name:"ゴブリン",rarity:"N"},
+{name:"ウルフ",rarity:"N"},
+{name:"バット",rarity:"N"},
+{name:"ゾンビ",rarity:"N"},
+{name:"スケルトン",rarity:"N"},
+
 {name:"ナイト",rarity:"R"},
-{name:"エルフ",rarity:"R"},
+{name:"アーチャー",rarity:"R"},
+{name:"魔法使い",rarity:"R"},
+{name:"モンク",rarity:"R"},
+{name:"忍者",rarity:"R"},
+{name:"パラディン",rarity:"R"},
+
 {name:"ドラゴン",rarity:"SR"},
 {name:"フェニックス",rarity:"SR"},
-{name:"伝説の勇者",rarity:"SSR"}
+{name:"ユニコーン",rarity:"SR"},
+{name:"大魔導士",rarity:"SR"},
+{name:"魔王",rarity:"SR"},
+
+{name:"伝説の勇者",rarity:"SSR"},
+{name:"天空の女神",rarity:"SSR"},
+{name:"時空の支配者",rarity:"SSR"},
+{name:"終焉のドラゴン",rarity:"SSR"}
+
 ];
 
 function getRandomCharacter(){
 
 let rand=Math.random()*100;
 
+let pool;
+
 if(rand<60){
-return characters[Math.floor(Math.random()*2)];
+pool=characters.filter(c=>c.rarity==="N");
 }
 else if(rand<85){
-return characters[2+Math.floor(Math.random()*2)];
+pool=characters.filter(c=>c.rarity==="R");
 }
 else if(rand<97){
-return characters[4+Math.floor(Math.random()*2)];
+pool=characters.filter(c=>c.rarity==="SR");
 }
 else{
-return characters[6];
+pool=characters.filter(c=>c.rarity==="SSR");
 }
+
+return pool[Math.floor(Math.random()*pool.length)];
 
 }
 
 function draw(num){
 
 const result=document.getElementById("result");
+
 result.innerHTML="ガチャを引いています...";
 
 setTimeout(()=>{
@@ -150,7 +185,6 @@ if(num===1){
 let char=getRandomCharacter();
 
 if(char.rarity==="SSR"){
-document.body.classList.add("rainbow");
 ssr=true;
 }
 
@@ -178,19 +212,33 @@ ${char.rarity}<br>${char.name}
 
 html+="</div>";
 
-if(ssr){
-document.body.classList.add("rainbow");
-}
-
 }
 
 result.innerHTML=html;
 
-setTimeout(()=>{
-document.body.classList.remove("rainbow");
-},2000);
+if(ssr){
+showSSREffect();
+}
 
 },1000);
+
+}
+
+function showSSREffect(){
+
+const effect=document.getElementById("ssrEffect");
+
+effect.style.display="flex";
+
+document.body.classList.add("rainbow");
+
+setTimeout(()=>{
+
+effect.style.display="none";
+
+document.body.classList.remove("rainbow");
+
+},2000);
 
 }
 
